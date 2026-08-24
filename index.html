@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CleanUp Tool is a focused Windows cleanup utility for reclaiming space and keeping systems running lean.">
+  <title>CleanUp Tool | A cleaner Windows, on command</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="CleanUp Tool home">
+      <span class="brand-mark"><img src="assets/cleanup-icon.png" alt=""></span>
+      <span>CleanUp<span class="brand-dot">.</span>Tool</span>
+    </a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" class="nav-links">
+      <a href="#features">What it clears</a>
+      <a href="#workflow">How it works</a>
+      <a href="https://github.com/Myles-Mattlock/CleanUp-Tool" target="_blank" rel="noreferrer">Source <span class="arrow">↗</span></a>
+      <a class="nav-cta" href="https://github.com/Myles-Mattlock/CleanUp-Tool/releases" target="_blank" rel="noreferrer">Get CleanUp <span>↗</span></a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell">
+      <div class="hero-copy reveal">
+        <div class="eyebrow"><span class="pulse"></span> SYSTEM UTILITY / WINDOWS</div>
+        <h1>A cleaner Windows,<br><em>on command.</em></h1>
+        <p class="hero-lede">One focused tool for clearing the clutter that slows your system down. Free space, fresh starts, and no mystery software running in the background.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://github.com/Myles-Mattlock/CleanUp-Tool/releases" target="_blank" rel="noreferrer"><span class="button-icon">↓</span> Download v2.0.1</a>
+          <a class="text-link" href="#workflow">See how it works <span>→</span></a>
+        </div>
+        <div class="trust-line"><span>●</span> Open source on GitHub <b>·</b> Built for Windows</div>
+      </div>
+
+      <div class="terminal-wrap reveal reveal-delay">
+        <div class="terminal-glow"></div>
+        <div class="terminal">
+          <div class="terminal-top"><div class="window-dots"><i></i><i></i><i></i></div><span>System CleanUp.exe</span><span class="terminal-status">● ONLINE</span></div>
+          <div class="terminal-body">
+            <div class="terminal-brand"><img src="assets/cleanup-icon.png" alt="CleanUp Tool icon"><div><strong>MYLES MATTLOCK</strong><small>SERVICE AND REPAIR</small></div></div>
+            <p class="terminal-muted">Windows System Cleanup Tool <span>v2.0.1</span></p>
+            <p><span class="teal">$</span> cleanup --system --safe</p>
+            <div class="progress-row"><span>clearing temp files</span><b>DONE</b></div>
+            <div class="progress-row"><span>emptying recycle bin</span><b>DONE</b></div>
+            <div class="progress-row"><span>flushing DNS cache</span><b>DONE</b></div>
+            <div class="progress-row"><span>optimizing component store</span><b>DONE</b></div>
+            <div class="terminal-rule"></div>
+            <p class="success"><span>✓</span> CLEANUP PROCESS FINISHED</p>
+            <div class="terminal-result"><span>SPACE RECLAIMED</span><strong>1.84 GB</strong></div>
+          </div>
+        </div>
+        <div class="terminal-caption"><span>01</span><span>NO BLOAT. JUST MAINTENANCE.</span></div>
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="Tool highlights">
+      <div class="ticker-track"><span>FREE UP SPACE</span><b>✦</b><span>RESET THE NOISE</span><b>✦</b><span>KEEP WINDOWS LEAN</span><b>✦</b><span>FREE UP SPACE</span><b>✦</b><span>RESET THE NOISE</span><b>✦</b></div>
+    </section>
+
+    <section id="features" class="features section-shell">
+      <div class="section-intro reveal"><div class="eyebrow">01 / THE CLEANUP</div><h2>The useful stuff.<br><span>None of the fluff.</span></h2></div>
+      <div class="feature-grid">
+        <article class="feature-card reveal"><div class="card-number">01</div><div class="feature-icon">⌁</div><h3>Clear the clutter</h3><p>Remove temporary files, old logs, Windows downloads, Prefetch data, and other digital dust taking up room.</p><span class="card-tag">TEMP FILES / LOGS</span></article>
+        <article class="feature-card feature-card-accent reveal reveal-delay"><div class="card-number">02</div><div class="feature-icon">↻</div><h3>Refresh the system</h3><p>Flush DNS, run Disk Cleanup, and optimize the Windows component store with the tools already on your machine.</p><span class="card-tag">DNS / DISM / CLEANMGR</span></article>
+        <article class="feature-card reveal reveal-delay-2"><div class="card-number">03</div><div class="feature-icon">▣</div><h3>Stay in control</h3><p>Choose a guided cleanup or a no-prompt run. Logs are written locally, and stable releases are checked through GitHub.</p><span class="card-tag">LOGS / UPDATES / CHOICE</span></article>
+      </div>
+    </section>
+
+    <section id="workflow" class="workflow section-shell">
+      <div class="workflow-visual reveal"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><img src="assets/cleanup-icon.png" alt="CleanUp Tool broom icon"></div>
+      <div class="workflow-copy reveal reveal-delay"><div class="eyebrow">02 / THE WORKFLOW</div><h2>Point it at the mess.<br><em>Let it work.</em></h2><p>CleanUp runs as a straightforward Windows utility and elevates when it needs to. See each stage as it happens, then get a simple report of what was reclaimed.</p><ol class="steps"><li><span>01</span><div><strong>Choose your mode</strong><small>System or Server cleanup, with prompts or without.</small></div></li><li><span>02</span><div><strong>Run the sequence</strong><small>Presets and native Windows utilities do the heavy lifting.</small></div></li><li><span>03</span><div><strong>Read the result</strong><small>See time elapsed, reclaimed storage, and any errors in the log.</small></div></li></ol></div>
+    </section>
+
+    <section class="download section-shell reveal"><div><div class="eyebrow">03 / READY WHEN YOU ARE</div><h2>Make room<br>for better work.</h2></div><div class="download-side"><p>CleanUp Tool is free, open source, and made for the Windows machines that need a little less baggage.</p><a class="button button-light" href="https://github.com/Myles-Mattlock/CleanUp-Tool/releases" target="_blank" rel="noreferrer">View releases <span>↗</span></a></div></section>
+  </main>
+
+  <footer class="site-footer section-shell"><div class="footer-brand"><img src="assets/cleanup-icon.png" alt=""> <span>MYLES MATTLOCK</span></div><span>CleanUp Tool · v2.0.1</span><a href="https://github.com/Myles-Mattlock/CleanUp-Tool" target="_blank" rel="noreferrer">GitHub ↗</a></footer>
+  <script src="script.js"></script>
+</body>
+</html>
