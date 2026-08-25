@@ -21,6 +21,15 @@ The script is safe to run again after website changes. It copies the current rep
 sudo systemctl status nginx
 ```
 
+After pushing website changes to GitHub, update the live site with:
+
+```sh
+chmod +x update-site.sh
+sudo ./update-site.sh
+```
+
+This keeps one backup of the previously served site at `/var/backups/cleanup-tool-website/latest.tar.gz`. The backup is replaced each time the update succeeds.
+
 ## HTTPS
 
 The installer serves HTTP through Nginx. For HTTPS, point `cleanup-tool.myles-mattlock.co.uk` at the server, allow TCP port 443, then install Certbot and configure an Nginx certificate:
