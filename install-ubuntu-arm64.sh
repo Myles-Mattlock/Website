@@ -5,6 +5,7 @@ APP_NAME="cleanup-tool-website"
 APP_USER="cleanup-site"
 APP_DIR="/opt/${APP_NAME}"
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+WEBSITE_REPO_URL="${WEBSITE_REPO_URL:-https://github.com/Myles-Mattlock/Website.git}"
 DOTNET_VERSION="10.0"
 APP_PORT="5000"
 
@@ -36,6 +37,7 @@ apt-get update
 apt-get install -y --no-install-recommends \
   ca-certificates \
   curl \
+  git \
   nginx \
   libicu-dev \
   zlib1g
@@ -65,24 +67,33 @@ fi
 ln -sfn /usr/local/share/dotnet/dotnet /usr/local/bin/dotnet
 export DOTNET_ROOT=/usr/local/share/dotnet
 
-if [[ ! -f "${SOURCE_DIR}/Website.csproj" ]]; then
-  echo "Website.csproj was not found beside this script." >&2
+if [[ ! -f "${SOURCE_DIR}/Website.csproj" || ! -f "${SOURCE_DIR}/Program.cs" || ! -f "${SOURCE_DIR}/index.html" ]]; then
+  SOURCE_DIR="$(mktemp -d)"
+  trap 'rm -rf "${SOURCE_DIR}"' EXIT
+  git clone --depth 1 --quiet "${WEBSITE_REPO_URL}" "${SOURCE_DIR}"
+fi
+
+if [[ ! -f "${SOURCE_DIR}/Website.csproj" || ! -f "${SOURCE_DIR}/Program.cs" || ! -f "${SOURCE_DIR}/index.html" ]]; then
+  echo "The complete website source could not be found or downloaded." >&2
+  echo "Expected Website.csproj, Program.cs, and index.html." >&2
   exit 1
 fi
 
 install -d -o "${APP_USER}" -g "${APP_USER}" "${APP_DIR}"
-/usr/local/bin/dotnet publish "${SOURCE_DIR}/Website.csproj" \
+"${DOTNET_ROOT}/dotnet" publish "${SOURCE_DIR}/Website.csproj" \
   --configuration Release \
   --runtime linux-arm64 \
   --self-contained false \
+  --verbosity normal \
   --output "${APP_DIR}"
 chown -R "${APP_USER}:${APP_USER}" "${APP_DIR}"
 
 if [[ ! -x "${DOTNET_ROOT}/dotnet" || ! -f "${APP_DIR}/Website.dll" ]]; then
   echo "The .NET host or published Website.dll is missing." >&2
   echo "DOTNET_ROOT=${DOTNET_ROOT}" >&2
+  echo "Source directory: ${SOURCE_DIR}" >&2
   echo "Published files:" >&2
-  find "${APP_DIR}" -maxdepth 1 -type f -printf '%f\n' | sort >&2
+  find "${APP_DIR}" -maxdepth 2 -printf '%y %p\n' | sort >&2
   exit 1
 fi
 
