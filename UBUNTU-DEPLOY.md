@@ -30,6 +30,8 @@ sudo ./update-site.sh
 
 This keeps one backup of the previously served site at `/var/backups/cleanup-tool-website/latest.tar.gz`. The backup is replaced each time the update succeeds.
 
+The updater validates the staged files, Nginx configuration, and a local HTTP response before reporting success. If validation fails, it restores the previous backup automatically.
+
 ## HTTPS
 
 The installer serves HTTP through Nginx. For HTTPS, point `cleanup-tool.myles-mattlock.co.uk` at the server, allow TCP port 443, then install Certbot and configure an Nginx certificate:

@@ -56,21 +56,39 @@ cp -a "${SOURCE_DIR}/assets" "${STAGING_DIR}/"
 find "${STAGING_DIR}" -type d -exec chmod 0755 {} +
 find "${STAGING_DIR}" -type f -exec chmod 0644 {} +
 
+if [[ ! -s "${STAGING_DIR}/index.html" || ! -f "${STAGING_DIR}/assets/cleanup-icon.png" ]]; then
+  echo "The staged website is incomplete; live files were not changed." >&2
+  exit 1
+fi
+
+restore_backup() {
+  find "${WEB_ROOT}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+  if [[ -f "${BACKUP_FILE}" ]]; then
+    tar -xzf "${BACKUP_FILE}" -C "${WEB_ROOT}"
+    chown -R root:www-data "${WEB_ROOT}"
+  fi
+}
+
 find "${WEB_ROOT}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 cp -a "${STAGING_DIR}/." "${WEB_ROOT}/"
 chown -R root:www-data "${WEB_ROOT}"
 
-if ! nginx -t; then
-  echo "Nginx validation failed. Restoring the previous website files." >&2
-  find "${WEB_ROOT}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-  if [[ -f "${BACKUP_FILE}" ]]; then
-    tar -xzf "${BACKUP_FILE}" -C "${WEB_ROOT}"
-  fi
-  chown -R root:www-data "${WEB_ROOT}"
+if ! nginx -t || ! test -s "${WEB_ROOT}/index.html" || ! test -f "${WEB_ROOT}/assets/cleanup-icon.png"; then
+  echo "Website validation failed. Restoring the previous website files." >&2
+  restore_backup
   exit 1
 fi
 
 systemctl reload nginx
+
+if ! curl --fail --silent --show-error --max-time 10 \
+  -H "Host: ${DOMAIN_NAME}" \
+  "http://127.0.0.1/" >/dev/null; then
+  echo "The local Nginx site check failed. Restoring the previous website files." >&2
+  restore_backup
+  systemctl reload nginx
+  exit 1
+fi
 
 cat <<EOF
 
