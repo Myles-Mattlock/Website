@@ -43,7 +43,9 @@ if [[ ! -f "${SOURCE_DIR}/index.html" || ! -f "${SOURCE_DIR}/styles.css" || ! -f
 fi
 
 install -d -o root -g www-data -m 0755 "${WEB_ROOT}"
-cp -a "${SOURCE_DIR}/." "${WEB_ROOT}/"
+find "${WEB_ROOT}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+cp "${SOURCE_DIR}/index.html" "${SOURCE_DIR}/styles.css" "${SOURCE_DIR}/brand-overrides.css" "${SOURCE_DIR}/script.js" "${WEB_ROOT}/"
+cp -a "${SOURCE_DIR}/assets" "${WEB_ROOT}/"
 find "${WEB_ROOT}" -type d -exec chmod 0755 {} +
 find "${WEB_ROOT}" -type f -exec chmod 0644 {} +
 
