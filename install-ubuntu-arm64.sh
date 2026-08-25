@@ -50,7 +50,7 @@ if ! id --user "${APP_USER}" >/dev/null 2>&1; then
   useradd --system --home-dir "${APP_DIR}" --shell /usr/sbin/nologin "${APP_USER}"
 fi
 
-if [[ ! -x /usr/local/bin/dotnet ]]; then
+if [[ ! -x /usr/local/share/dotnet/dotnet ]]; then
   curl --fail --silent --show-error --location https://dot.net/v1/dotnet-install.sh \
     --output /tmp/dotnet-install.sh
   chmod 0755 /tmp/dotnet-install.sh
@@ -61,6 +61,9 @@ if [[ ! -x /usr/local/bin/dotnet ]]; then
   ln -sfn /usr/local/share/dotnet/dotnet /usr/local/bin/dotnet
   rm -f /tmp/dotnet-install.sh
 fi
+
+ln -sfn /usr/local/share/dotnet/dotnet /usr/local/bin/dotnet
+export DOTNET_ROOT=/usr/local/share/dotnet
 
 if [[ ! -f "${SOURCE_DIR}/Website.csproj" ]]; then
   echo "Website.csproj was not found beside this script." >&2
@@ -75,8 +78,11 @@ install -d -o "${APP_USER}" -g "${APP_USER}" "${APP_DIR}"
   --output "${APP_DIR}"
 chown -R "${APP_USER}:${APP_USER}" "${APP_DIR}"
 
-if [[ ! -x /usr/local/bin/dotnet || ! -f "${APP_DIR}/Website.dll" ]]; then
+if [[ ! -x "${DOTNET_ROOT}/dotnet" || ! -f "${APP_DIR}/Website.dll" ]]; then
   echo "The .NET host or published Website.dll is missing." >&2
+  echo "DOTNET_ROOT=${DOTNET_ROOT}" >&2
+  echo "Published files:" >&2
+  find "${APP_DIR}" -maxdepth 1 -type f -printf '%f\n' | sort >&2
   exit 1
 fi
 
@@ -91,7 +97,7 @@ Type=simple
 User=${APP_USER}
 Group=${APP_USER}
 WorkingDirectory=${APP_DIR}
-ExecStart=/usr/local/bin/dotnet ${APP_DIR}/Website.dll
+ExecStart=${DOTNET_ROOT}/dotnet ${APP_DIR}/Website.dll
 Environment=ASPNETCORE_ENVIRONMENT=Production
 Environment=ASPNETCORE_URLS=http://127.0.0.1:${APP_PORT}
 Restart=on-failure
