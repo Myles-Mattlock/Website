@@ -13,7 +13,7 @@ chmod +x install-ubuntu-arm64.sh
 sudo ./install-ubuntu-arm64.sh
 ```
 
-Open the printed server address in a browser. Make sure TCP port 80 is allowed in the server firewall and cloud provider security group.
+Create DNS A records for `myles-mattlock.co.uk` and `www.myles-mattlock.co.uk` pointing to the server's public IPv4 address. Then open `http://myles-mattlock.co.uk`. Make sure TCP port 80 is allowed in the server firewall and cloud provider security group.
 
 The script is safe to run again after website changes. It copies the current repository files and reloads Nginx.
 

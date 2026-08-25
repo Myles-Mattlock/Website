@@ -4,6 +4,7 @@ set -Eeuo pipefail
 APP_NAME="cleanup-tool-website"
 WEB_ROOT="/var/www/${APP_NAME}"
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+DOMAIN_NAME="myles-mattlock.co.uk"
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "Run this script as root: sudo ./install-ubuntu-arm64.sh" >&2
@@ -48,9 +49,9 @@ find "${WEB_ROOT}" -type f -exec chmod 0644 {} +
 
 cat > /etc/nginx/sites-available/${APP_NAME} <<EOF
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    server_name _;
+  listen 80;
+  listen [::]:80;
+  server_name ${DOMAIN_NAME} www.${DOMAIN_NAME};
 
     root ${WEB_ROOT};
     index index.html;
@@ -76,6 +77,7 @@ cat <<EOF
 CleanUp Tool website is running.
 
 Public URL: http://$(hostname -I | awk '{print $1}')
+Domain URL: http://${DOMAIN_NAME}
 
 Website root: ${WEB_ROOT}
 
@@ -83,5 +85,5 @@ Service status:
   systemctl status nginx
 
 To update after changing the site files, run this script again.
-For HTTPS, point your domain at this server and add a certificate with certbot.
+For HTTPS, point ${DOMAIN_NAME} at this server and add a certificate with certbot.
 EOF
