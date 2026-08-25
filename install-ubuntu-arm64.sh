@@ -4,7 +4,7 @@ set -Eeuo pipefail
 APP_NAME="cleanup-tool-website"
 WEB_ROOT="/var/www/${APP_NAME}"
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-DOMAIN_NAME="myles-mattlock.co.uk"
+DOMAIN_NAME="cleanup-tool.myles-mattlock.co.uk"
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "Run this script as root: sudo ./install-ubuntu-arm64.sh" >&2
@@ -53,7 +53,7 @@ cat > /etc/nginx/sites-available/${APP_NAME} <<EOF
 server {
   listen 80;
   listen [::]:80;
-  server_name ${DOMAIN_NAME} www.${DOMAIN_NAME};
+  server_name ${DOMAIN_NAME};
 
     root ${WEB_ROOT};
     index index.html;
