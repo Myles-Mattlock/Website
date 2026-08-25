@@ -23,3 +23,5 @@ Check the result:
 curl -I https://cleanup-tool.myles-mattlock.co.uk
 sudo certbot renew --dry-run
 ```
+
+The v3.0.0 download is hosted by this website at `/assets/SystemCleanUp-v3.0.0.zip`. Replace that asset and update the filename in `index.html` when publishing a newer release. The official source and release history remain available through the GitHub links.
