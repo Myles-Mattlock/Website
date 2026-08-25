@@ -9,6 +9,13 @@
   filter: none;
 }
 
+.footer-brand img {
+  width: 120px;
+  height: 58px;
+  object-fit: contain;
+  filter: none;
+}
+
 .app-preview {
   position: relative;
   margin: 0;
