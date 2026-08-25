@@ -75,6 +75,11 @@ install -d -o "${APP_USER}" -g "${APP_USER}" "${APP_DIR}"
   --output "${APP_DIR}"
 chown -R "${APP_USER}:${APP_USER}" "${APP_DIR}"
 
+if [[ ! -x /usr/local/bin/dotnet || ! -f "${APP_DIR}/Website.dll" ]]; then
+  echo "The .NET host or published Website.dll is missing." >&2
+  exit 1
+fi
+
 cat > /etc/systemd/system/${APP_NAME}.service <<EOF
 [Unit]
 Description=CleanUp Tool website
@@ -82,7 +87,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Type=exec
+Type=simple
 User=${APP_USER}
 Group=${APP_USER}
 WorkingDirectory=${APP_DIR}
@@ -122,7 +127,13 @@ rm -f /etc/nginx/sites-enabled/default
 ln -sfn /etc/nginx/sites-available/${APP_NAME} /etc/nginx/sites-enabled/${APP_NAME}
 nginx -t
 systemctl daemon-reload
-systemctl enable --now "${APP_NAME}.service"
+systemctl enable "${APP_NAME}.service"
+systemctl restart "${APP_NAME}.service"
+if ! systemctl is-active --quiet "${APP_NAME}.service"; then
+  echo "The website service failed to start. Recent service logs:" >&2
+  journalctl -u "${APP_NAME}.service" -n 40 --no-pager >&2
+  exit 1
+fi
 systemctl enable --now nginx
 
 cat <<EOF
