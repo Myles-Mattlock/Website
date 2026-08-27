@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root{--ink:#08161d;--deep:#061117;--teal:#20d4d2;--ice:#e9f4ef;--muted:#91a8a7;--line:rgba(218,240,231,.18)}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{background:var(--ink);color:var(--ice);font-family:'Space Grotesk',sans-serif;overflow:hidden}
+body:before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 50% 42%,rgba(32,212,210,.12),transparent 34%),linear-gradient(135deg,var(--deep),var(--ink) 55%,#102b31);pointer-events:none}
+.coming-soon{min-height:100vh;display:grid;place-items:center;padding:32px;position:relative}
+.ambient-line{position:absolute;width:min(780px,90vw);height:min(780px,90vw);border:1px solid rgba(32,212,210,.14);border-radius:50%;box-shadow:0 0 0 44px rgba(32,212,210,.025),0 0 0 120px rgba(32,212,210,.018);animation:drift 14s ease-in-out infinite}
+.coming-card{width:min(620px,100%);text-align:center;position:relative;padding:28px}
+.logo{width:min(280px,75vw);height:auto;max-height:150px;object-fit:contain;margin-bottom:28px;filter:drop-shadow(0 18px 35px rgba(0,0,0,.32))}
+.eyebrow{color:var(--teal);font:11px 'DM Mono',monospace;letter-spacing:2px;margin:0 0 22px}
+h1{font-size:clamp(42px,7vw,78px);line-height:.98;letter-spacing:-2px;margin:0 0 26px}h1 em{color:var(--teal);font-style:normal}
+.intro{max-width:440px;margin:0 auto 32px;color:var(--muted);font-size:16px;line-height:1.65}
+.button{display:inline-flex;align-items:center;gap:12px;padding:15px 19px;background:var(--teal);color:var(--ink);font-weight:700;text-decoration:none;border-radius:3px;transition:transform .2s,background .2s}.button:hover{background:#c4ed7b;transform:translateY(-2px)}.button span{font-size:18px}
+@keyframes drift{50%{transform:scale(1.04) rotate(3deg);opacity:.7}}
+@media(max-width:520px){.coming-soon{padding:18px}.coming-card{padding:14px}.logo{max-height:110px;margin-bottom:22px}h1{letter-spacing:-1px}.intro{font-size:14px}}

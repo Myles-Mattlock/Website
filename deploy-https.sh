@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 
 DOMAIN_NAME="cleanup-tool.myles-mattlock.co.uk"
+PERSONAL_DOMAIN_NAME="myles-mattlock.co.uk"
 SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 DEPLOY_USER="${SUDO_USER:-ubuntu}"
 CERTBOT_EMAIL="${1:-}"
@@ -32,6 +33,7 @@ else
 fi
 
 bash "${SOURCE_DIR}/install-ubuntu-arm64.sh"
+bash "${SOURCE_DIR}/update-site.sh"
 
 apt-get update
 apt-get install -y --no-install-recommends certbot python3-certbot-nginx
@@ -40,7 +42,8 @@ certbot --nginx --non-interactive --agree-tos \
   --email "${CERTBOT_EMAIL}" \
   --redirect \
   --keep-until-expiring \
-  -d "${DOMAIN_NAME}"
+  -d "${DOMAIN_NAME}" \
+  -d "${PERSONAL_DOMAIN_NAME}"
 
 nginx -t
 systemctl reload nginx
@@ -49,6 +52,7 @@ cat <<EOF
 
 HTTPS is enabled for:
   https://${DOMAIN_NAME}
+  https://${PERSONAL_DOMAIN_NAME}
 
 Certificate renewal test:
   certbot renew --dry-run
