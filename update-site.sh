@@ -32,7 +32,7 @@ else
   git -C "${SOURCE_DIR}" pull --ff-only
 fi
 
-for required_file in index.html styles.css brand-overrides.css script.js; do
+for required_file in index.html releases.html styles.css brand-overrides.css script.js; do
   if [[ ! -f "${SOURCE_DIR}/${required_file}" ]]; then
     echo "Missing required website file: ${required_file}" >&2
     exit 1
@@ -51,12 +51,12 @@ if [[ -n "$(find "${WEB_ROOT}" -mindepth 1 -print -quit)" ]]; then
   chmod 0600 "${BACKUP_FILE}"
 fi
 
-cp "${SOURCE_DIR}/index.html" "${SOURCE_DIR}/styles.css" "${SOURCE_DIR}/brand-overrides.css" "${SOURCE_DIR}/script.js" "${STAGING_DIR}/"
+cp "${SOURCE_DIR}/index.html" "${SOURCE_DIR}/releases.html" "${SOURCE_DIR}/styles.css" "${SOURCE_DIR}/brand-overrides.css" "${SOURCE_DIR}/script.js" "${STAGING_DIR}/"
 cp -a "${SOURCE_DIR}/assets" "${STAGING_DIR}/"
 find "${STAGING_DIR}" -type d -exec chmod 0755 {} +
 find "${STAGING_DIR}" -type f -exec chmod 0644 {} +
 
-if [[ ! -s "${STAGING_DIR}/index.html" || ! -f "${STAGING_DIR}/assets/cleanup-icon.png" ]]; then
+if [[ ! -s "${STAGING_DIR}/index.html" || ! -s "${STAGING_DIR}/releases.html" || ! -f "${STAGING_DIR}/assets/cleanup-icon.png" ]]; then
   echo "The staged website is incomplete; live files were not changed." >&2
   exit 1
 fi
@@ -73,7 +73,7 @@ find "${WEB_ROOT}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 cp -a "${STAGING_DIR}/." "${WEB_ROOT}/"
 chown -R root:www-data "${WEB_ROOT}"
 
-if ! nginx -t || ! test -s "${WEB_ROOT}/index.html" || ! test -f "${WEB_ROOT}/assets/cleanup-icon.png"; then
+if ! nginx -t || ! test -s "${WEB_ROOT}/index.html" || ! test -s "${WEB_ROOT}/releases.html" || ! test -f "${WEB_ROOT}/assets/cleanup-icon.png"; then
   echo "Website validation failed. Restoring the previous website files." >&2
   restore_backup
   exit 1
@@ -85,6 +85,15 @@ if ! curl --fail --silent --show-error --max-time 10 \
   -H "Host: ${DOMAIN_NAME}" \
   "http://127.0.0.1/" >/dev/null; then
   echo "The local Nginx site check failed. Restoring the previous website files." >&2
+  restore_backup
+  systemctl reload nginx
+  exit 1
+fi
+
+if ! curl --fail --silent --show-error --max-time 10 \
+  -H "Host: ${DOMAIN_NAME}" \
+  "http://127.0.0.1/releases.html" >/dev/null; then
+  echo "The local Nginx releases page check failed. Restoring the previous website files." >&2
   restore_backup
   systemctl reload nginx
   exit 1
