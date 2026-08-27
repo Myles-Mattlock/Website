@@ -73,6 +73,14 @@ find "${WEB_ROOT}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 cp -a "${STAGING_DIR}/." "${WEB_ROOT}/"
 chown -R root:www-data "${WEB_ROOT}"
 
+for required_file in index.html releases.html styles.css brand-overrides.css script.js; do
+  if ! cmp -s "${STAGING_DIR}/${required_file}" "${WEB_ROOT}/${required_file}"; then
+    echo "The live file was not copied correctly: ${required_file}" >&2
+    restore_backup
+    exit 1
+  fi
+done
+
 if ! nginx -t || ! test -s "${WEB_ROOT}/index.html" || ! test -s "${WEB_ROOT}/releases.html" || ! test -f "${WEB_ROOT}/assets/cleanup-icon.png"; then
   echo "Website validation failed. Restoring the previous website files." >&2
   restore_backup
