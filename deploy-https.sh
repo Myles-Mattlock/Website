@@ -41,6 +41,7 @@ apt-get install -y --no-install-recommends certbot python3-certbot-nginx
 certbot --nginx --non-interactive --agree-tos \
   --email "${CERTBOT_EMAIL}" \
   --redirect \
+  --expand \
   --keep-until-expiring \
   -d "${DOMAIN_NAME}" \
   -d "${PERSONAL_DOMAIN_NAME}"
